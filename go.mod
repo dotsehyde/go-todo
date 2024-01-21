@@ -6,6 +6,8 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/mattn/go-sqlite3 v1.14.19
+	github.com/shopspring/decimal v1.3.1
+	github.com/steebchen/prisma-client-go v0.32.1
 )
 
 require (
