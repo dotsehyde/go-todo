@@ -1,6 +1,7 @@
 package server
 
 import (
+	"go-todo/internal/controller"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -11,8 +12,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Static("/", "public")
 
-	e.GET("/", s.HelloWorldHandler)
+	e.GET("/", controller.Home)
 	e.GET("/health", s.healthHandler)
 
 	return e

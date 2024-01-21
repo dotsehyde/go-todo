@@ -1,0 +1,12 @@
+package layout
+
+templ Main(title string) {
+	<html>
+		<link href="/css/output.css" rel="stylesheet"/>
+		<title>{ title }</title>
+		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+		<body>
+			{ children... }
+		</body>
+	</html>
+}

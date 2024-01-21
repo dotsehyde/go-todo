@@ -1,0 +1,11 @@
+
+package views
+
+import "go-todo/internal/views/layout"
+import "go-todo/internal/views/auth"
+
+templ Home() {
+	@layout.Main("GoTODO App") {
+		@auth.Login()
+	}
+}

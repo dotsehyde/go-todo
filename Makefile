@@ -3,8 +3,13 @@
 # Build the application
 all: build
 
+css: tailwindcss -i public/css/input.css -o public/css/output.css --minify
+
+css-watch: tailwindcss -i public/css/input.css -o public/css/output.css --watch
+
 build:
 	@echo "Building..."
+	@tailwindcss -i public/css/input.css -o public/css/output.css --minify
 	@go build -o main cmd/api/main.go
 
 # Run the application
@@ -38,4 +43,4 @@ watch:
 	    fi; \
 	fi
 
-.PHONY: all build run test clean
+.PHONY: all build run test clean css css-watch
