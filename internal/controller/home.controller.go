@@ -8,5 +8,6 @@ import (
 )
 
 func Home(c echo.Context) error {
+
 	return utils.Render(c, views.Home())
 }

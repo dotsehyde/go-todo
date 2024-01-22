@@ -2,10 +2,11 @@
 package views
 
 import "go-todo/internal/views/layout"
-import "go-todo/internal/views/auth"
 
 templ Home() {
 	@layout.Main("GoTODO App") {
-		@auth.Login()
+		<div class="h-screen w-screen justify-center flex items-center">
+			HomePage
+		</div>
 	}
 }
