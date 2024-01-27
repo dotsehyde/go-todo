@@ -10,18 +10,14 @@ func LoggerMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		req := c.Request()
 		res := c.Response()
 
-		// log4go.Info("Req [%s] %s %s", req.Method, req.RequestURI, req.RemoteAddr)
-		logFile := log4go.NewFileLogWriter("./logs/request.log", true, true)
-		// defer logFile.Close()
-		log4go.AddFilter("file", log4go.DEBUG, logFile)
-		log4go.Info("REQ [%s] %s %s", req.Method, req.RequestURI, req.RemoteAddr)
+		log4go.LOGGER("info").Info("REQ [%s] %s %s", req.Method, req.RequestURI, req.RemoteAddr)
 
 		err := next(c)
 
 		if res.Status >= 400 {
-			log4go.Error("RES [%s] %s %s %d", req.Method, req.RequestURI, req.RemoteAddr, res.Status)
+			log4go.LOGGER("error").Error("RES [%s] %s %s %d", req.Method, req.RequestURI, req.RemoteAddr, res.Status)
 		} else {
-			log4go.Info("RES [%s] %s %s %d", req.Method, req.RequestURI, req.RemoteAddr, res.Status)
+			log4go.LOGGER("info").Info("RES [%s] %s %s %d", req.Method, req.RequestURI, req.RemoteAddr, res.Status)
 		}
 		return err
 	}

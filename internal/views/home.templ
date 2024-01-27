@@ -2,11 +2,20 @@
 package views
 
 import "go-todo/internal/views/layout"
+import "go-todo/internal/views/partials"
 
 templ Home() {
 	@layout.Main("GoTODO App") {
-		<div class="h-screen w-screen justify-center flex items-center">
+		// Nav
+		@partials.Header()
+		<div class="h-screen w-screen justify-center flex flex-col items-center">
 			HomePage
+			<a
+				hx-get="/auth/logout"
+				hx-target="body"
+				hx-confirm="Are you sure you want to logout?"
+				class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700 hover:cursor-pointer"
+			>Logout</a>
 		</div>
 	}
 }

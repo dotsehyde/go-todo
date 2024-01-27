@@ -1,0 +1,22 @@
+{
+	"console": {
+		"enable": true,
+		"level": "FINE"
+	},
+	"files": [
+		{
+			"enable": true,
+			"level": "DEBUG",
+			"filename": "./logs/info.log",
+			"category": "info",
+			"pattern": "[%D %T] [%C] [%L] (%S) %M"
+		},
+		{
+			"enable": false,
+			"level": "ERROR",
+			"filename": "./logs/error.log",
+			"category": "error",
+			"pattern": "[%D %T] [%C] [%L] (%S) %M"
+		}
+	]
+}

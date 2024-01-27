@@ -3,6 +3,7 @@ package tests
 import (
 	"encoding/json"
 	"go-todo/internal/controller"
+	"go-todo/internal/database"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -16,6 +17,10 @@ func TestHandler(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	resp := httptest.NewRecorder()
 	c := e.NewContext(req, resp)
+	controller := &controller.Controller{
+		//TODO: Mock database
+		Db: database.New(nil),
+	}
 	// s := &server.Server{}
 	// Assertions
 	if err := controller.Home(c); err != nil {

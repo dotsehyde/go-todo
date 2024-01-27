@@ -1,27 +1,49 @@
 package server
 
 import (
+	"context"
+	"database/sql"
 	"fmt"
+	"go-todo/internal/controller"
+	"go-todo/internal/database"
+	"go-todo/internal/middleware"
+	custom_sql "go-todo/sql"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 
-	"go-todo/internal/database"
-
 	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type Server struct {
-	port int
-	db   database.Service
+	port       int
+	controller *controller.Controller
 }
 
 func NewServer() *http.Server {
+	// Declare Database config
+	ctx := context.Background()
+
+	db, err := sql.Open("sqlite3", "./db.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	// create tables
+	if _, err := db.ExecContext(ctx, custom_sql.Schema); err != nil {
+		log.Fatal(err.Error())
+	}
+	// Init SessionManager
+	middleware.InitSessionManager(db)
+	queries := database.New(db)
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 	NewServer := &Server{
 		port: port,
-		db:   database.New(),
+		controller: &controller.Controller{
+			Db: queries,
+		},
 	}
 
 	// Declare Server config

@@ -1,0 +1,18 @@
+{
+  "devDependencies": {
+    "prettier": "^3.1.1",
+    "prettier-plugin-go-template": "^0.0.15",
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "elix": "^15.0.1"
+  },
+  "scripts": {
+    "dev": "$GOPATH/bin/air",
+    "test": "echo 'Testing...' && go test ./tests -v",
+    "clean": "echo 'Cleaning...' && rm -f main",
+    "build-css": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch",
+    "build": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --minify && $GOPATH/bin/templ generate && go build -o app cmd/api/main.go",
+    "run": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css && $GOPATH/bin/templ generate && go run cmd/api/main.go"
+  }
+}

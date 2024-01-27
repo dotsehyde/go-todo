@@ -1,116 +1,115 @@
 package controller
 
 import (
-	"fmt"
+	"context"
 	"go-todo/internal/database"
-	"go-todo/internal/models"
+	"go-todo/internal/middleware"
 	"go-todo/internal/utils"
 	"go-todo/internal/views/auth"
+	"time"
 
-	"github.com/go-playground/validator/v10"
-	"github.com/google/uuid"
-	"github.com/gorilla/sessions"
-	"github.com/labstack/echo-contrib/session"
+	"github.com/jeanphorn/log4go"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
-var dbClient = database.Client
+func (s *Controller) Login(c echo.Context) error {
 
-func Login(c echo.Context) error {
-	sess, _ := session.Get("session", c)
-	fmt.Println(sess.Values["logged"])
-	if l, ok := sess.Values["logged"].(bool); ok && l {
-		fmt.Println(l)
+	if middleware.SessionManager.Exists(c.Request().Context(), "logged") {
 		return c.Redirect(301, "/")
 	}
 	return utils.Render(c, auth.Login(""))
 }
 
-func ProcessLogin(c echo.Context) error {
-	// ctx := context.Background()
+func (s *Controller) ProcessLogin(c echo.Context) error {
+	ctx := context.Background()
 	email := c.FormValue("email")
-	// password := c.FormValue("password")
+	password := c.FormValue("password")
 
-	// user, err := dbClient.User.FindMany(
-	// 	db.User.ID.Equals(email),
-	// ).Exec(ctx)
-	// if errors.Is(err, db.ErrNotFound) {
-	// 	fmt.Println(err.Error())
-	// 	return utils.Render(c, auth.Login("Invalid credentials"))
-	// } else if err != nil {
-	// 	fmt.Println(err.Error())
-	// 	return utils.Render(c, auth.Login(err.Error()))
-	// }
-	// if err := verifyPassword(password, user[0].Password); err != nil {
-	// 	fmt.Println(err.Error())
-	// 	return utils.Render(c, auth.Login(err.Error()))
-	// }
-	sess, _ := session.Get("session", c)
-	sess.Options = &sessions.Options{
-		Path:     "/",
-		MaxAge:   0,
-		HttpOnly: false,
-		Secure:   false, //chane
+	if email == "" || password == "" {
+		log4go.LOGGER("error").Error("Error validating input: %v", "Email or password is empty")
+		return utils.Render(c, auth.Login("Invalid credentials"))
 	}
-	sess.Values["logged"] = true
-	sess.Values["data"] = models.SessionData{Username: "guest", Email: email, Id: uuid.NewString()}
-	sess.Save(c.Request(), c.Response())
+	user, err := s.Db.GetUserByEmail(ctx, email)
+	if err != nil {
+		log4go.LOGGER("error").Error("Error getting user: %v", err)
+		return utils.Render(c, auth.Login("User not found"))
+	}
+	if err := verifyPassword(password, user.Password); err != nil {
+		log4go.LOGGER("error").Error("Error verifying password: %v", err)
+		return utils.Render(c, auth.Login("Invalid credentials"))
+	}
+	middleware.SessionManager.Put(c.Request().Context(), "logged", true)
+	middleware.SessionManager.Put(c.Request().Context(), "name", user.Name)
+	middleware.SessionManager.Put(c.Request().Context(), "email", user.Email)
 	return c.Redirect(301, "/")
 }
 
-func Register(c echo.Context) error {
-	sess, _ := session.Get("session", c)
-	if l, ok := sess.Values["logged"].(bool); ok && l {
+func (s *Controller) Register(c echo.Context) error {
+
+	if middleware.SessionManager.Exists(c.Request().Context(), "logged") {
 		return c.Redirect(301, "/")
 	}
 	return utils.Render(c, auth.Register(""))
 }
 
-func ProcessRegister(c echo.Context) error {
+func (s *Controller) ProcessRegister(c echo.Context) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*100)
+	defer cancel()
 	input := struct {
 		Name     string `form:"name" json:"name" validate:"required"`
 		Email    string `form:"email" json:"email" validate:"email"`
 		Password string `form:"password" json:"password" validate:"required,min=6"`
 	}{}
 	if err := c.Bind(&input); err != nil {
+		log4go.LOGGER("error").Error("Error binding input: %v", err)
 		return utils.Render(c, auth.Register(err.Error()))
 	}
-	validate := validator.New()
-	if err := validate.Struct(input); err != nil {
+
+	if err := Validate.Struct(input); err != nil {
+		log4go.LOGGER("error").Error("Error validating input: %v", err)
 		return utils.Render(c, auth.Register(err.Error()))
 	}
-	fmt.Println(input.Name)
-	// hashPassword, err := hashPassword(input.Password)
-	// if err != nil {
-	// 	return utils.Render(c, auth.Register(err.Error()))
-	// }
 
-	// res, err := dbClient.User.CreateOne(
-	// 	db.User.Name.Set(input.Name),
-	// 	db.User.Email.Set(input.Email),
-	// 	db.User.Password.Set(hashPassword),
-	// ).Exec(context.Background())
-
-	// if err != nil {
-	// 	return utils.Render(c, auth.Register(err.Error()))
-	// }
-	sess, _ := session.Get("session", c)
-	sess.Options = &sessions.Options{
-		Path:     "/",
-		MaxAge:   0,
-		HttpOnly: false,
-		Secure:   false, //chane
+	hashPassword, err := hashPassword(input.Password)
+	if err != nil {
+		log4go.LOGGER("error").Error("Error hashing password: %v", err)
+		return utils.Render(c, auth.Register(err.Error()))
 	}
-	sess.Values["logged"] = true
-	sess.Values["data"] = models.SessionData{Username: "guest", Email: input.Email, Id: uuid.NewString()}
-	sess.Save(c.Request(), c.Response())
+	input.Password = hashPassword
+	// check if user exists
+	_, err = s.Db.GetUserByEmail(ctx, input.Email)
+	if err == nil {
+		log4go.LOGGER("error").Error("Error creating user: %v", err)
+		return utils.Render(c, auth.Register("User already exists"))
+	}
+	user, err := s.Db.CreateUser(ctx, database.CreateUserParams{
+		Name:     input.Name,
+		Email:    input.Email,
+		Password: hashPassword,
+	})
+
+	if err != nil {
+		log4go.LOGGER("error").Error("Error creating user: %v", err)
+		return utils.Render(c, auth.Register(err.Error()))
+	}
+	log4go.LOGGER("info").Info("User created: %v", user)
+	middleware.SessionManager.Put(c.Request().Context(), "logged", true)
+	middleware.SessionManager.Put(c.Request().Context(), "name", user.Name)
+	middleware.SessionManager.Put(c.Request().Context(), "email", user.Email)
+
 	return c.Redirect(301, "/")
+}
+
+func (s *Controller) Logout(c echo.Context) error {
+
+	middleware.SessionManager.Destroy(c.Request().Context())
+	return c.Redirect(301, "/auth/")
 }
 
 func hashPassword(password string) (string, error) {
 	// Hashing the password with bcrypt
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MaxCost)
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
 	}
