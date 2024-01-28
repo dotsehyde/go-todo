@@ -16,8 +16,17 @@ func (s *Controller) Home(c echo.Context) error {
 	// }
 	// return c.Redirect(301, "/auth/")
 	if middleware.SessionManager.Exists(c.Request().Context(), "logged") {
-		return utils.Render(c, views.Home())
+		return utils.Render(c, views.Home("todo"))
 	} else {
 		return c.Redirect(301, "/auth/")
 	}
+}
+
+func (s *Controller) Todo(c echo.Context) error {
+	return c.String(200, `<h1>Todo</h1>`)
+}
+
+func (s *Controller) Profile(c echo.Context) error {
+	return c.String(200, `<h1>Profile</h1>`)
+
 }

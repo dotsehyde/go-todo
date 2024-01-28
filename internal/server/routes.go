@@ -35,6 +35,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	// 	TokenLookup: "cookie:token",
 	// }))
 	e.GET("/", s.controller.Home)
+	e.GET("/todo/", s.controller.Todo)
+	e.GET("/profile/", s.controller.Profile)
 	// e.Any("/*", func(c echo.Context) error {
 	// 	return c.String(http.StatusNotFound, "404 Not Found - Unknown Path")
 	// })
