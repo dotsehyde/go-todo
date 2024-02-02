@@ -29,7 +29,8 @@ func (s *Controller) Home(c echo.Context) error {
 
 func (s *Controller) Todo(c echo.Context) error {
 	ctx := context.Background()
-	todos, err := s.Db.ListTodosByOwner(ctx, 1)
+	id, _ := middleware.SessionManager.Get(c.Request().Context(), "id").(int64)
+	todos, err := s.Db.ListTodosByOwner(ctx, id)
 	if err != nil {
 		return err
 	}
