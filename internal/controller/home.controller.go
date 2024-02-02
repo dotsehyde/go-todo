@@ -4,6 +4,7 @@ import (
 	"go-todo/internal/middleware"
 	"go-todo/internal/utils"
 	"go-todo/internal/views"
+	profile_view "go-todo/internal/views/profile"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,6 +28,13 @@ func (s *Controller) Todo(c echo.Context) error {
 }
 
 func (s *Controller) Profile(c echo.Context) error {
-	return c.String(200, `<h1>Profile</h1>`)
+	name, _ := middleware.SessionManager.Get(c.Request().Context(), "name").(string)
+	email, _ := middleware.SessionManager.Get(c.Request().Context(), "email").(string)
+	data := profile_view.ProfileViewData{
+		Name:  name,
+		Email: email,
+	}
+	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
+	return utils.Render(c, profile_view.ProfileView(data))
 
 }

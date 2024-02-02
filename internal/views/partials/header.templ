@@ -1,6 +1,6 @@
 package partials
 
-templ Header(currentPage string) {
+templ Header() {
 	<div>
 		<nav class="bg-white dark:bg-gray-800  shadow ">
 			<div class="px-8 mx-auto max-w-7xl">
@@ -13,11 +13,9 @@ templ Header(currentPage string) {
 						<div class="block">
 							<div class="flex items-baseline ml-10 space-x-4">
 								<a
-									if currentPage == "todo" {
-										class="text-blue-500 cursor-pointer hover:text-blue-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-									} else {
+									id="todo-link"
 										class="text-gray-800 cursor-pointer dark:text-white  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-									}
+									onclick={changeTitle("todo")}
 									hx-get="/todo"
 									hx-trigger="click"
 									hx-target="#main-content"
@@ -26,11 +24,9 @@ templ Header(currentPage string) {
 									TODOs
 								</a>
 								<a
-									if currentPage == "profile" {
-										class="text-blue-500 cursor-pointer hover:text-blue-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-									} else {
+									onclick={changeTitle("profile")}
 										class="text-gray-800 cursor-pointer dark:text-white  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-									}
+									id="profile-link"
 									hx-get="/profile"
 									hx-trigger="click"
 									hx-target="#main-content"
@@ -45,4 +41,18 @@ templ Header(currentPage string) {
 			</div>
 		</nav>
 	</div>
+}
+
+script changeTitle(title string){
+	let todo = document.getElementById("todo-link");
+	let profile = document.getElementById("profile-link");
+
+	if (title == "todo") {
+		profile.className = "text-gray-800 cursor-pointer dark:text-white  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium";
+		todo.className = "text-blue-500 cursor-pointer hover:text-blue-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium";
+	} else if(title == "profile") {
+		todo.className = "text-gray-800 cursor-pointer dark:text-white  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium";
+		profile.className = "text-blue-500 cursor-pointer hover:text-blue-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium";
+	}
+
 }

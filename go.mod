@@ -7,11 +7,8 @@ require (
 	github.com/alexedwards/scs/sqlite3store v0.0.0-20231113091146-cef4b05350c8
 	github.com/alexedwards/scs/v2 v2.7.0
 	github.com/go-playground/validator/v10 v10.17.0
-	github.com/google/uuid v1.6.0
-	github.com/gorilla/sessions v1.2.2
 	github.com/jeanphorn/log4go v0.0.0-20231225120528-d93eb9001e51
 	github.com/joho/godotenv v1.5.1
-	github.com/labstack/echo-contrib v0.15.0
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/mattn/go-sqlite3 v1.14.20
 	github.com/spazzymoto/echo-scs-session v1.0.0
@@ -23,8 +20,6 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
-	github.com/gorilla/context v1.1.1 // indirect
-	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

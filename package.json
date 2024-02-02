@@ -8,7 +8,7 @@
     "elix": "^15.0.1"
   },
   "scripts": {
-    "dev": "$GOPATH/bin/air",
+    "dev": "CGO_ENABLED=1 $GOPATH/bin/air",
     "test": "echo 'Testing...' && go test ./tests -v",
     "clean": "echo 'Cleaning...' && rm -f main",
     "build-css": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch",

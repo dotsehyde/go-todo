@@ -1,0 +1,20 @@
+package profile_view
+
+type ProfileViewData struct{
+	Name string
+	Email string
+}
+
+templ ProfileView(data ProfileViewData){
+	<div>
+		<h1>
+		My Profile page
+		</h1>
+		<p>
+		Name: {data.Name} 
+		</p>
+		<p>
+		Eamil: {data.Email} 
+		</p>
+	</div>
+}
