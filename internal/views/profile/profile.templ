@@ -6,15 +6,23 @@ type ProfileViewData struct{
 }
 
 templ ProfileView(data ProfileViewData){
-	<div>
-		<h1>
+	<div class="h-[90%] w-full flex justify-center items-center gap-4 flex-col">
+		<h1 class="text-2xl ">
 		My Profile page
 		</h1>
-		<p>
+		<p class="text-lg hover:cursor-pointer">
 		Name: {data.Name} 
+		<span class="text-sm text-gray-500"> (click to edit)</span>
 		</p>
-		<p>
+		<p class="text-lg hover:cursor-pointer">
 		Eamil: {data.Email} 
+		<span class="text-sm text-gray-500"> (click to edit)</span>
 		</p>
+		<a
+				hx-get="/auth/logout"
+				hx-target="body"
+				hx-confirm="Are you sure you want to logout?"
+				class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700 hover:cursor-pointer"
+			>Logout</a>
 	</div>
 }

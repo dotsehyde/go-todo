@@ -40,5 +40,10 @@ func (s *Server) RegisterRoutes() http.Handler {
 	// e.Any("/*", func(c echo.Context) error {
 	// 	return c.String(http.StatusNotFound, "404 Not Found - Unknown Path")
 	// })
+
+	todo := e.Group("/todo")
+	todo.GET("/form/", s.controller.TodoForm)
+	todo.POST("/create/", s.controller.CreateTodo)
+	todo.DELETE("/delete/:id/", s.controller.DeleteTodo)
 	return e
 }

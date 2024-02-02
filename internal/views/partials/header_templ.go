@@ -40,7 +40,7 @@ func Header() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-get=\"/todo\" hx-trigger=\"click\" hx-target=\"#main-content\" hx-update=\"#h-title\">TODOs</a> ")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-get=\"/todo\" hx-trigger=\"click\" hx-target=\"#main-content\">TODOs</a> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -57,7 +57,7 @@ func Header() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"text-gray-800 cursor-pointer dark:text-white  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium\" id=\"profile-link\" hx-get=\"/profile\" hx-trigger=\"click\" hx-target=\"#main-content\" hx-update=\"#h-title\">Profile</a></div></div></div></div></div></nav></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"text-gray-800 cursor-pointer dark:text-white  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium\" id=\"profile-link\" hx-get=\"/profile\" hx-trigger=\"click\" hx-target=\"#main-content\">Profile</a></div></div></div></div></div></nav></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -42,6 +42,7 @@ func (s *Controller) ProcessLogin(c echo.Context) error {
 	middleware.SessionManager.Put(c.Request().Context(), "logged", true)
 	middleware.SessionManager.Put(c.Request().Context(), "name", user.Name)
 	middleware.SessionManager.Put(c.Request().Context(), "email", user.Email)
+	middleware.SessionManager.Put(c.Request().Context(), "id", user.ID)
 	return c.Redirect(301, "/")
 }
 
@@ -97,6 +98,7 @@ func (s *Controller) ProcessRegister(c echo.Context) error {
 	middleware.SessionManager.Put(c.Request().Context(), "logged", true)
 	middleware.SessionManager.Put(c.Request().Context(), "name", user.Name)
 	middleware.SessionManager.Put(c.Request().Context(), "email", user.Email)
+	middleware.SessionManager.Put(c.Request().Context(), "id", user.ID)
 
 	return c.Redirect(301, "/")
 }

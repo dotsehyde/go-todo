@@ -12,8 +12,10 @@ import "bytes"
 
 import "go-todo/internal/views/layout"
 import "go-todo/internal/views/partials"
+import "go-todo/internal/views/todo"
+import "go-todo/internal/database"
 
-func Home(page string) templ.Component {
+func Home(todos []database.Todo) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -40,7 +42,15 @@ func Home(page string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" <div id=\"main-content\" class=\"h-screen w-screen justify-center flex flex-col items-center\">HomePage <a hx-get=\"/auth/logout\" hx-target=\"body\" hx-confirm=\"Are you sure you want to logout?\" class=\"py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700 hover:cursor-pointer\">Logout</a></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" <div id=\"main-content\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = todo_view.TodoView(todos).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

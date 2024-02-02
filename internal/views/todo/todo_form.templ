@@ -1,0 +1,12 @@
+package todo_view
+
+templ TodoForm(){
+	<form class="px-[25%]" hx-post="/todo/create" hx-trigger="submit" hx-target="#main-content">
+    <div class="border-[1px] p-3 rounded-md border-gray-300 flex flex-col gap-4">
+        <h3 class="text-2xl font-bold text-left mt-4">Create a Todo</h3>
+        <input name="title" type="text" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Title"/>
+        <input name="content" type="text" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Content"/>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Create Todo</button>
+    </div>
+</form>
+}
